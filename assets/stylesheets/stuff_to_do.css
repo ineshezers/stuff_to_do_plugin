@@ -230,3 +230,13 @@ li.stuff-to-do-item div.issue-details {
   position: absolute;
   height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
 }
+
+
+#main-menu {
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    display: none;
+    /* overflow: hidden; */
+    #background: #E0E0E0 url(../images/bg.png) repeat-x;
+}
