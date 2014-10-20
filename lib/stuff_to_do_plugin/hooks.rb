@@ -14,4 +14,7 @@ module MyPlugin
     render_on :view_my_account, :partial => 'account_settings/stuff_to_do_account_settings', :layout => false
     render_on :view_users_form, :partial => 'stuff_to_do_reportee/stuff_to_do_admin_reportee', :layout => false
   end
+  class StuffToDoTasksControlHooks < Redmine::Hook::ViewListener
+    render_on(:view_layouts_base_html_head, :partial => 'stuff_to_do_top_menu_hooks/css')
+  end
 end

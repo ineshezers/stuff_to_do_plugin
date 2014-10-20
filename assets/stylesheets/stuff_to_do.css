@@ -241,10 +241,4 @@ li.stuff-to-do-item div.issue-details {
     #background: #E0E0E0 url(../images/bg.png) repeat-x;
 }
 
-#top-menu a.stuff-to-do {
-	padding-left:           20px;
-	background-image:       url(../images/ok_16.png);
-	background-repeat:      no-repeat;
-	background-size:        16px 14px;
-}
 
