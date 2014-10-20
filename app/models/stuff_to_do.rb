@@ -16,13 +16,11 @@ class StuffToDo < ActiveRecord::Base
   acts_as_list :scope => :user
 
   if Rails::VERSION::MAJOR >= 3
-    scope :doing_now, lambda { |user|
-      {
-        :conditions => { :user_id => user.id },
-        :order => 'position ASC',
-        :limit => 5
-      }
-    }
+  scope :doing_now, ->(user) {
+    where(user_id: user.id).limit(5).order('position ASC')
+  }
+
+
   else
     named_scope :doing_now, lambda { |user|
       {
@@ -41,14 +39,16 @@ class StuffToDo < ActiveRecord::Base
   # http://dev.rubyonrails.org/ticket/7257
   #
   if Rails::VERSION::MAJOR >= 3
-    scope :recommended, lambda { |user|
-      {
-        :conditions => { :user_id => user.id },
-        :order => 'position ASC',
-        :limit => self.count,
-        :offset => 5
-      }
-    }
+  # TODO: Rails bug
+  #
+  # ActiveRecord ignores :offset if :limit isn't added also.  But since we 
+  # want all the records, we need to provide a limit that will include everything
+  #
+  # http://dev.rubyonrails.org/ticket/7257
+  #
+  scope :recommended, ->(user) {
+    where(user_id: user.id).limit(StuffToDo.count).offset(5).order('position ASC')
+  }
   else
     named_scope :recommended, lambda { |user|
       {
@@ -80,20 +80,23 @@ class StuffToDo < ActiveRecord::Base
         visible_issues =  Issue.visible
       end
 
-      potential_stuff_to_do = visible_issues.find(:all,
-                                         :include => [:status, :priority, :project],
-                                         :conditions => conditions_for_available(user, filter, project),
-                                         :order => "#{Issue.table_name}.created_on DESC")
+#      potential_stuff_to_do = visible_issues.find(:all,
+#                                         :include => [:status, :priority, :project],
+#                                         :conditions => conditions_for_available(user, filter, project),
+#                                         :order => "#{Issue.table_name}.created_on DESC")
+#      potential_stuff_to_do = visible_issues.all.where(conditions_for_available(user, filter, project))
+#       potential_stuff_to_do = visible_issues.find_by_sql("SELECT * FROM `issues` JOIN `issue_statuses` ON `issues`.`status_id`=`issue_statuses`.`id`").where(conditions_for_available(user, filter, project))
+       potential_stuff_to_do = visible_issues.includes([:status, :priority, :project]).where(conditions_for_available(user, filter, project)).order("#{Issue.table_name}.created_on DESC")
     end
 
-    stuff_to_do = StuffToDo.find(:all, :conditions => { :user_id => user.id }).collect(&:stuff)
+    stuff_to_do = StuffToDo.where(user_id: user.id).collect(&:stuff)
 
     return potential_stuff_to_do - stuff_to_do
   end
 
   def self.assigned(user)
 
-    return StuffToDo.find(:all, :conditions => { :user_id => user.id }).collect(&:stuff)
+    return StuffToDo.where(user_id: user.id).collect(&:stuff)
   end
 
   def self.using_projects_as_items?
@@ -188,7 +191,7 @@ class StuffToDo < ActiveRecord::Base
   end
 
   def self.reorder_items(type, user, ids)
-    list = self.find_all_by_user_id_and_stuff_type(user.id, type)
+    list = self.all.where(user_id: user.id, stuff_type: type)
     stuff_to_dos_found = list.collect { |std| std.stuff_id.to_i }
 
     remove_missing_records(user, stuff_to_dos_found, ids.values)
@@ -264,7 +267,7 @@ class StuffToDo < ActiveRecord::Base
       conditions["#{IssueStatus.table_name}.id"] = "#{Setting.plugin_stuff_to_do_plugin['statuses_for_stuff_to_do'].join(',')}))"
     end
 
-    conditions["#{Project.table_name}.status"] = Project::STATUS_ACTIVE
+#    conditions["#{Project.table_name}.status"] = Project::STATUS_ACTIVE
     conditions["assigned_to_id"] = user.id
     conditions["assigned_to_id"] = [user.id] + user.group_ids if(user.is_a?(User))
 
