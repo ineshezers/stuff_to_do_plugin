@@ -229,8 +229,7 @@ class StuffToDo < ActiveRecord::Base
   end
 
   def self.remove(user_id, id)
-    removed_stuff_to_do = self.find_by_user_id_and_stuff_id(user_id, id)
-    removed_stuff_to_do.destroy
+    self.destroy_all(:stuff_id => id)
   end
 
   def self.add(user_id, id, to_front)

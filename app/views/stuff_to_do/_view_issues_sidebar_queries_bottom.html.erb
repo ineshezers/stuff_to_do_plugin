@@ -9,13 +9,13 @@
 			  <% else %>
 			   <p><h3><%=l(:stuff_to_do_title_user, :user => assigned_to.name)%></h3>
 			  <% end %>
-  			<p><%= link_to(l(:stuff_to_do_add_to_front), {:controller => 'stuff_to_do', :action => 'add', :issue_id => @issue.id, :to_front => true, :user_id => assigned_to }) %>
-  			<br><%= link_to(l(:stuff_to_do_add_to_back), {:controller => 'stuff_to_do', :action => 'add', :issue_id => @issue.id, :to_front => false, :user_id => assigned_to }) %>
+  			<p><%= link_to(l(:stuff_to_do_add_to_front), {:controller => 'stuff_to_do', :action => 'add', :issue_id => @issue.id, :to_front => true,  :user_id => assigned_to, :next => request.original_url }) %>
+  			<br><%= link_to(l(:stuff_to_do_add_to_back), {:controller => 'stuff_to_do', :action => 'add', :issue_id => @issue.id, :to_front => false, :user_id => assigned_to, :next => request.original_url }) %>
 				</div>
 		<% elsif StuffToDo.assigned(assigned_to).count(@issue) > 0 %>
 				<div id="stuff-to-do">
 						<p><h3><%=l(:stuff_to_do_title)%></h3>
-						<p><%= link_to(l(:stuff_to_do_remove), {:controller => 'stuff_to_do', :action => 'delete', :issue_id => @issue.id, :user_id => assigned_to }) %>
+						<p><%= link_to(l(:stuff_to_do_remove), {:controller => 'stuff_to_do', :action => 'delete', :issue_id => @issue.id, :user_id => assigned_to, :next => request.original_url }) %>
 				</div>
 		<% end %>
 	<% end %>

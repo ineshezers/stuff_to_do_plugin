@@ -23,22 +23,26 @@ class StuffToDoController < ApplicationController
   end
   
   def delete
-     if !params[:issue_id].nil? && !params[:user_id].nil?
-       StuffToDo.remove(params[:user_id],  params[:issue_id] )
-     end
-     
+    Rails.logger.info("Referer: #{request.referer}")
+    if !params[:issue_id].nil? && !params[:user_id].nil?
+      StuffToDo.remove(params[:user_id],  params[:issue_id] )
+    end
+
     respond_to do |format|
-      format.html { redirect_to_referer_or { render :text => ('Deleting Issue from stuff-to-do.'), :layout => true} }
+#      format.html { redirect_back_or_default url_for(:controller => 'issues', :action => 'show', :id => params[:issue_id]) }
+      format.html { redirect_to params[:next] }
       format.js { render :partial => 'stuff-to-do', :layout => false}
     end
   end
   
   def add
+    Rails.logger.info("Referer: #{request.referer}")
     if !params[:issue_id].nil? && !params[:user_id].nil?
       StuffToDo.add(params[:user_id], params[:issue_id], params[:to_front] == "true")         
     end
     respond_to do |format|
-      format.html { redirect_to_referer_or { render :text => ('Adding issue to stuff-to-do.'), :layout => true} }
+#      format.html { redirect_back_or_default url_for(:controller => 'issues', :action => 'show', :id => params[:issue_id]) }
+      format.html { redirect_to params[:next] }
       format.js { render :partial => 'stuff-to-do', :layout => false}
     end
   end
