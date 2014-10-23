@@ -249,9 +249,9 @@ class StuffToDo < ActiveRecord::Base
   def self.active_and_visible_projects(user=User.current)
     projects = self.available(user, nil, user).collect{ |issue| issue.project }.uniq
 #    projects = Project.active.where(Project.visible_condition(user))
-    if !User.current.allowed_to_globally?(:view_all_reportee_issues, {}) and (user != User.current)
-      projects = projects.where(Project.visible_condition(User.current))
-    end
+#    if !User.current.allowed_to_globally?(:view_all_reportee_issues, {}) and (user != User.current)
+#      projects = projects.find(Project.visible_condition(User.current))
+#    end
     projects
   end
 
