@@ -17,7 +17,7 @@ div.menu .filter { float: right; }
 
 div.issue-details, div.project-details { position:relative; display:inline; float:left; width:71%; margin: 0 .5%; }
 div.estimate { position:relative; float:left; display: inline; width: 6%; margin: 0; text-align: center; }
-div.progress { position:relative; float:left; display:inline; width: 17%; margin: 0 0 0 .5%; }
+div.progress { position:relative; float:left; display:inline; width: 6%; margin: 0 0 0 .5%; }
 
 div.pane-summary { text-align: right; }
 div.pane-summary p { font-size: 80% }
@@ -208,8 +208,8 @@ li.stuff-to-do-item div.estimate {
   position: absolute;
   display: block;
   float: none;
-  width: 15%;
-  left: 82%;
+  width: 5%;
+  left: 93%;
   top: 4px;
   text-align: left;
   z-index: 100;
@@ -218,7 +218,7 @@ li.stuff-to-do-item div.estimate {
   white-space: nowrap;
 }
 li.stuff-to-do-item div.issue-details {
-  width: 80%;
+  width: 91%;
 }
 
 #user_reportees label, #group_reportees label
