@@ -191,7 +191,7 @@ class StuffToDo < ActiveRecord::Base
   end
 
   def self.reorder_items(type, user, ids)
-    list = self.all.where(user_id: user.id, stuff_type: type)
+    list = self.where(user_id: user.id, stuff_type: type)
     stuff_to_dos_found = list.collect { |std| std.stuff_id.to_i }
 
     remove_missing_records(user, stuff_to_dos_found, ids.values)
