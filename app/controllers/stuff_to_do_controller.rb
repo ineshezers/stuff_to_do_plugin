@@ -4,8 +4,10 @@ class StuffToDoController < ApplicationController
   include StuffToDoHelper
   
   before_filter :get_user, :get_project
+  #before_filter :find_user, :only => [:index]
   helper :stuff_to_do
   helper :custom_fields
+  accept_api_auth :index
   
   def index
     @doing_now = StuffToDo.doing_now(@user)
@@ -19,6 +21,7 @@ class StuffToDoController < ApplicationController
     respond_to do |format|
         format.html { render :template => 'stuff_to_do/index', :layout => !request.xhr? }
         format.csv  { send_data(stuff_to_do_to_csv(@doing_now, @recommended, @available, @user, params), :type => 'text/csv; header=present', :filename => 'export.csv') }
+        format.api
     end
   end
   
