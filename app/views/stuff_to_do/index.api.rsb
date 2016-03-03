@@ -3,6 +3,7 @@ api.array :users do
     api.user do
       api.id         user.id
       api.login      user.login
+      api.name       user.name
       api.firstname  user.firstname
       api.lastname   user.lastname
       api.mail       user.mail
